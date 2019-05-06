@@ -239,9 +239,9 @@ function viewInvoiceWindow(invoice, orderId)
         itemTbl.classList.add("spreadsheetview");
         let skuInput = addRowVTableInput(itemTbl, "SKU", it["SKU"], it["SKU"]+"_sku");
         let name = addRowVTableTxt(itemTbl, "Name", it["NAME"]);
-        //let model = addRowVTableTxt(itemTbl, "Model", it["TIRE_MODEL"] || "");
-        //let size = addRowVTableTxt(itemTbl, "Size", it["size"] || "");
-        //let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["manufacturer"] || "");
+        let model = addRowVTableTxt(itemTbl, "Model", it["TIRE_MODEL"] || "N/A");
+        let size = addRowVTableTxt(itemTbl, "Size", it["TIRE_SIZE"] || "N/A");
+        let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["TIRE_MANF"] || "N/A");
         let quantity = addRowVTableInput(itemTbl, "Quantity", it["AMOUNT"], it["AMOUNT"]+"_quantity");
         let price = addRowVTableTxt(itemTbl, "Price", mnyFmt.format(it["PRICE"]));
         let priceVal = it["PRICE"];
@@ -338,7 +338,8 @@ function createInvoiceWindow()
 
     makeWindow("New Order", container);
 }
-function showProducts(){
+function showProducts()
+{
   fetch("php/products.php")
   .then(function(response) {
       return response.json();
@@ -405,7 +406,8 @@ function viewProductsWindow(products)
 
     makeWindow("Products", container);
 }
-function showCustomers(){
+function showCustomers()
+{
   fetch("php/customers.php")
   .then(function(response) {
       return response.json();
@@ -420,8 +422,8 @@ function showCustomers(){
       okayCancelWindow("Could not load products", function() {}, true);
   });
 }
-
-function viewCustomersWindow(customers){
+function viewCustomersWindow(customers)
+{
   var container = document.createElement("div");
   container.classList.add("spreadsheetview");
   var table = document.createElement("table");
