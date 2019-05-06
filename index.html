@@ -333,9 +333,70 @@ function createInvoiceWindow()
 
     makeWindow("New Order", container);
 }
-function viewProductsWindow()
+function showProducts(){
+  fetch("php/products.php")
+  .then(function(response) {
+      return response.json();
+  })
+  .then((response) => {
+      console.log('res: ' + JSON.stringify(response))
+      viewProductsWindow(response);
+    })
+  .catch(function(reason)
+  {
+      console.log(reason);
+      okayCancelWindow("Could not load products", function() {}, true);
+  });
+}
+function viewProductsWindow(products)
 {
-    var container = document.createElement("div");
+  var container = document.createElement("div");
+  container.classList.add("spreadsheetview");
+  var table = document.createElement("table");
+  container.appendChild(table);
+  table.classList.add("spreadsheetview");
+  var thead = document.createElement("tr");
+  table.appendChild(thead);
+  var columnLabels = ["SKU", "Name", "Inventory", "Price", "Type", "Model", "Manf", "Size"];
+  for (var coldex in columnLabels)
+  {
+      var th = document.createElement("th");
+      th.innerText = columnLabels[coldex];
+      thead.appendChild(th);
+  }
+  function addRow(sku, name, inventory, price, type, model, manf, size)
+  {
+      var row = document.createElement("tr");
+      table.appendChild(row);
+      for (var arg in arguments)
+      {
+          var td = document.createElement("td");
+          td.innerText = arguments[arg];
+          row.appendChild(td);
+      }
+      var actionsCell = document.createElement("td");
+      row.appendChild(actionsCell);
+      // TODO: do we want buttons/actions for products?
+      /*var buttons = {
+          "View/Edit": function() { showInvoice(orderId); },
+          "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
+      }
+      for (var label in buttons)
+      {
+          var button = document.createElement("button");
+          button.innerText = label;
+          button.onclick = buttons[label];
+          actionsCell.appendChild(button);
+      }*/
+  }
+  var formatter = moneyFormatter();
+
+  for (var product in products)
+  {
+      var row = products[product];
+      var amount = formatter.format(row["PRICE"]);
+      addRow(row["SKU"], row["NAME"], row["INVENTORY"], amount, row["PRODUCT_TYPE"], row["TIRE_MODEL"], row["TIRE_MANF"], row["TIRE_SIZE"]);
+  }
 
     makeWindow("Products", container);
 }
@@ -407,7 +468,7 @@ function deleteInvoice(orderId)
                     <span class="menuitemsubtext">Make a new order</span>
                 </div>
             </div>
-            <div class="menuitem" onclick="viewProductsWindow();">
+            <div class="menuitem" onclick="showProducts();">
                 <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
                 <div class="menuitemtext">
                     <span class="menuitemtitle">Products</span>
