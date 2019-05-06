@@ -11,7 +11,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM PURCHASE";
+$sql = "SELECT PURCHASE.*, CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME FROM PURCHASE, CUSTOMER
+WHERE PURCHASE.CUSTOMER_ID = CUSTOMER.CUSTOMER_ID";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
