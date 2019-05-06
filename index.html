@@ -262,8 +262,7 @@ function viewInvoiceWindow(invoice, orderId)
         }
         skuInput.oninput = (ev) =>
         {
-            // TODO: path format
-            fetch("/products_" + ev.target.value)
+            fetch("php/sku.php?sku=" + ev.target.value)
             .then((response) => {
                 if (response.ok)
                     return response.json();
@@ -271,13 +270,13 @@ function viewInvoiceWindow(invoice, orderId)
                     throw "oops";
             })
             .then((json) => {
-                name.innerText = json["name"];
-                model.innerText = json["model"] || "";
-                size.innerText = json["size"] || "";
-                manufacturer.innerText = json["manufacturer"] || "";
-                priceVal = json["price"];
-                price.innerText = mnyFmt.format(json["price"]);
-                recalcTotal(json["price"], parseInt(quantity.value));
+                name.innerText = json[0]["NAME"];
+                model.innerText = json[0]["TIRE_MODEL"] || "N/A";
+                size.innerText = json[0]["TIRE_SIZE"] || "N/A";
+                manufacturer.innerText = json[0]["TIRE_MANF"] || "N/A";
+                priceVal = json[0]["PRICE"];
+                price.innerText = mnyFmt.format(json[0]["PRICE"]);
+                recalcTotal(json[0]["PRICE"], parseInt(quantity.value));
             })
             .catch((reason) => {
                 name.innerText = "Invalid SKU";
