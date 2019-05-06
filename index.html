@@ -118,13 +118,14 @@ function showInvoices()
 }
 function showInvoice(orderId)
 {
-    // TODO: Change the path formatting when the real backend is implemented
-    fetch("/invoices_"+orderId)
+    fetch("php/invoicesPlus.php?orderId="+orderId)
     .then(function(response) {
-        return JSON.parse(response)
-        //return response.json();
+        return response.json();
     })
-    .then(viewInvoiceWindow)
+    .then((response) => {
+        console.log('res: ' + JSON.stringify(response))
+        viewInvoiceWindow(response);
+      })
     .catch(() => okayCancelWindow("Could not load order", () => {}, true));
 }
 function viewInvoicesWindow(invoices)
@@ -223,27 +224,29 @@ function viewInvoiceWindow(invoice)
     summaryTbl.classList.add("spreadsheetview");
 
 
-    addRowVTableTxt(summaryTbl, "Customer Name", invoice["customer"]);
-    var date = new Date(invoice["date"]).toLocaleString();
-    addRowVTableTxt(summaryTbl, "Purchase Date", date);
+    addRowVTableTxt(summaryTbl, "Customer Name", invoice[0]["FIRST_NAME"] + " " + invoice[0]["LAST_NAME"]);
+
     var mnyFmt = moneyFormatter();
     var form = document.createElement("form");
     container.append(form);
-    for (var item in invoice["items"])
+
+    for (var item in invoice)
     {
-        let it = invoice["items"][item];
+        let it = invoice[item];
         let itemTbl = document.createElement("table");
         form.appendChild(itemTbl);
         itemTbl.classList.add("spreadsheetview");
-        let skuInput = addRowVTableInput(itemTbl, "SKU", it["sku"], it["sku"]+"_sku");
-        let name = addRowVTableTxt(itemTbl, "Name", it["name"]);
-        let model = addRowVTableTxt(itemTbl, "Model", it["model"] || "");
-        let size = addRowVTableTxt(itemTbl, "Size", it["size"] || "");
-        let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["manufacturer"] || "");
-        let quantity = addRowVTableInput(itemTbl, "Quantity", it["quantity"], it["sku"]+"_quantity");
-        let price = addRowVTableTxt(itemTbl, "Price", mnyFmt.format(it["price"]));
-        let priceVal = it["price"];
-        let total = addRowVTableTxt(itemTbl, "Total", mnyFmt.format(it["total"]));
+        let skuInput = addRowVTableInput(itemTbl, "SKU", it["SKU"], it["SKU"]+"_sku");
+        let name = addRowVTableTxt(itemTbl, "Name", it["NAME"]);
+        //let model = addRowVTableTxt(itemTbl, "Model", it["TIRE_MODEL"] || "");
+        //let size = addRowVTableTxt(itemTbl, "Size", it["size"] || "");
+        //let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["manufacturer"] || "");
+        let quantity = addRowVTableInput(itemTbl, "Quantity", it["AMOUNT"], it["AMOUNT"]+"_quantity");
+        let price = addRowVTableTxt(itemTbl, "Price", mnyFmt.format(it["PRICE"]));
+        let priceVal = it["PRICE"];
+        let quantityVal = it["AMOUNT"]
+        let totalVal = priceVal * quantityVal;
+        let total = addRowVTableTxt(itemTbl, "Total", mnyFmt.format(totalVal));
         let deleteBtn = document.createElement("button");
         deleteBtn.innerText = "Delete";
         itemTbl.appendChild(deleteBtn);
@@ -289,6 +292,7 @@ function viewInvoiceWindow(invoice)
             recalcTotal(priceVal, newQuan);
         }
     }
+
     var buttonContainer = document.createElement("div");
     container.appendChild(buttonContainer);
     buttonContainer.style.margin = "5px";
