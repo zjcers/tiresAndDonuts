@@ -400,6 +400,72 @@ function viewProductsWindow(products)
 
     makeWindow("Products", container);
 }
+function showCustomers(){
+  fetch("php/customers.php")
+  .then(function(response) {
+      return response.json();
+  })
+  .then((response) => {
+      console.log('res: ' + JSON.stringify(response))
+      viewCustomersWindow(response);
+    })
+  .catch(function(reason)
+  {
+      console.log(reason);
+      okayCancelWindow("Could not load products", function() {}, true);
+  });
+}
+
+function viewCustomersWindow(customers){
+  var container = document.createElement("div");
+  container.classList.add("spreadsheetview");
+  var table = document.createElement("table");
+  container.appendChild(table);
+  table.classList.add("spreadsheetview");
+  var thead = document.createElement("tr");
+  table.appendChild(thead);
+  var columnLabels = ["ID", "FIRST", "LAST", "PHONE"];
+  for (var coldex in columnLabels)
+  {
+      var th = document.createElement("th");
+      th.innerText = columnLabels[coldex];
+      thead.appendChild(th);
+  }
+  function addRow(id, first, last, phone)
+  {
+      var row = document.createElement("tr");
+      table.appendChild(row);
+      for (var arg in arguments)
+      {
+          var td = document.createElement("td");
+          td.innerText = arguments[arg];
+          row.appendChild(td);
+      }
+      var actionsCell = document.createElement("td");
+      row.appendChild(actionsCell);
+      // TODO: do we want buttons/actions for customers?
+      /*var buttons = {
+          "View/Edit": function() { showInvoice(orderId); },
+          "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
+      }
+      for (var label in buttons)
+      {
+          var button = document.createElement("button");
+          button.innerText = label;
+          button.onclick = buttons[label];
+          actionsCell.appendChild(button);
+      }*/
+  }
+  var formatter = moneyFormatter();
+
+  for (var customer in customers)
+  {
+      var row = customers[customer];
+      addRow(row["CUSTOMER_ID"], row["FIRST_NAME"], row["LAST_NAME"], row["PHONE"]);
+  }
+
+    makeWindow("Customers", container);
+}
 function okayCancelWindow(confText, yesaction, nocancel)
 {
     var container = document.createElement("div");
