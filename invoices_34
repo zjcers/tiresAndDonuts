@@ -1,0 +1,24 @@
+{
+    "customer": "Ned Flanders",
+    "date": "2012-04-23T18:25:43.511Z",
+    "orderId": 34,
+    "items": [
+        {
+            "sku": 2345,
+            "name": "Monster Truck Tires",
+            "model": "UltraStomper",
+            "size": "real big",
+            "manufacturer": "Sean's Cannery",
+            "quantity": 4,
+            "price": 1200,
+            "total": 4800
+        },
+        {
+            "sku": 1234,
+            "name": "Donut Holes",
+            "quantity": 1,
+            "price": 1.99,
+            "total": 1.99
+        }
+    ]
+}

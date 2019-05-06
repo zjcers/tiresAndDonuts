@@ -1,0 +1,766 @@
+<html>
+<head>
+<title>KVZ Tires and Donuts</title>
+<style>
+body {
+	font-family: Arial, Helvetica, sans-serif;
+    margin: 0px;
+    background-image: url(bliss.jpg);
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+div.menu
+{
+    position: fixed;
+    bottom: 30px;
+    border-left: solid 1px #1854c2;
+    border-right: solid 1px #1854c2;
+    border-radius: 5px 5px 0px 0px;
+    width: 40%;
+    max-width: 380px;
+    height: 80%;
+    max-height: 620px;
+    display: none;
+    z-index: 100;
+}
+div.menutopbar
+{
+    background: linear-gradient(to bottom, #225cc5 0%,#74abe8 1%,#1a69d2 2%,#1a69d2 2%,#1a69d2 12%,#4792ec 100%);
+    border-radius: 5px 5px 0px 0px;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 12%;
+}
+hr.menuorangegradient
+{
+    background: linear-gradient(to right, #ced5df 0%,#ff8819 49%,#ced5df 100%);
+    margin: 0;
+    border: 0;
+    height: 2px;
+}
+div.menucontents
+{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    background: #092e51;
+}
+div.menuleft
+{
+    background-color:white;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 50%;
+    height: 82%;
+    float: left;
+}
+div.menuright
+{
+    background-color:#d3e5fa;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 50%;
+    height: 82%;
+    float: right;
+}
+div.menuitem
+{
+    display: inline-block;
+    box-sizing: border-box;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    user-select: none;
+    width: 100%;
+}
+div.menuitem:hover
+{
+    background-color: #6199dd;
+}
+img.menuitemicon
+{
+    display: inline-block;
+    float: left;
+}
+div.menuitemtext
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    float: left;
+    display: inline-block;
+    margin-left: 10px;
+}
+span.menuitemtitle
+{
+    font-size: 10px;
+    font-weight: bold;
+}
+span.menuitemsubtext
+{
+    font-size: 10px;
+    color:#808080;
+}
+div.menubottombar
+{
+    background: linear-gradient(to bottom, #438be3 0%,#0c56c0 100%);
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 7%;
+    position: relative;
+    bottom: 0px;
+}
+div.mainwindow
+{
+    /* width: 80%; */
+    max-width: 800px;
+    /* height: 70%; */
+    max-height: 600px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+div.windowtopbar
+{
+    background: linear-gradient(to bottom, #4993e6 7%,#2257d5 16%,#2257d5 84%,#1941a5 100%);
+    border-radius: 5px 5px 0px 0px;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 30px;
+    user-select: none;
+    color: white;
+    font-weight: bold;
+    padding-top: 6px;
+    padding-left: 6px;
+}
+div.windowXbutton
+{
+    background: linear-gradient(to right, #efa391 0%,#7d2b18 100%);
+    background: linear-gradient(to bottom, #efa391 0%,#7d2b18 100%);
+    display: inline-block;
+    box-sizing: border-box;
+    float: right;
+    margin-right: 5px;
+    height: 21px;
+    width: 21px;
+    border: solid 1px white;
+    border-radius: 2px;
+    color: white;
+    text-align: center;
+    font-size: 14pt;
+}
+div.windowcontent
+{
+    background-color: white;
+    border: solid 2px #293891;
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+div.bottombar
+{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4993e6+7,2257d5+16,2257d5+84,1941a5+100 */
+    background: #4993e6; /* Old browsers */
+    background: linear-gradient(to bottom, #4993e6 7%,#2257d5 16%,#2257d5 84%,#1941a5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    position: fixed;
+    z-index: 100;
+    height: 30px;
+    bottom: 0;
+    margin: 0;
+    width: 100%;
+}
+div.menubutton
+{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#062606+1,1b881b+6,1b881b+93,1a5f1b+100 */
+    background: #062606; /* Old browsers */
+    background: linear-gradient(to bottom, #084308 1%,#1b881b 6%,#1b881b 93%,#1a5f1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: linear-gradient(to right, #084308 1%,#1b881b 6%,#1b881b 93%,#1a5f1b 100%);
+    border: solid 1px #0b5125;
+    border-radius: 5px 5px / 0px 15px 15px 0px;
+    color: white;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 96px;
+    height: 30px;
+    padding: 3px;
+    margin: 0;
+    text-align: center;
+    font-weight: bolder;
+    position: fixed;
+    bottom: 0;
+    user-select: none;
+}
+div.taskbar
+{    display: inline-block;
+    box-sizing: border-box;
+    color: white;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+    width: 70%;
+    height: 100%;
+    padding: 5px;
+    margin: 0;
+}
+div.clocktray
+{
+    /* Permalink - use to edit and share this gradrelativeient: http://colorzilla.com/gradient-editor/#19bbf4+4,1499ed+15,1499ed+92,095bc9+100 */
+    background: #19bbf4; /* Old browsers */
+    background: linear-gradient(to bottom, #19bbf4 4%,#1499ed 15%,#1499ed 92%,#095bc9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    padding: 5px;
+    margin: 0;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 20%; 
+    max-width: 130px;
+    height: 30px;
+    text-align: right;
+    color: white;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    border-left: solid 1px #092e51;
+}
+#clock
+{
+    font-size: 10px;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    margin-right: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 100%;
+}
+span.vr
+{
+    border-right: solid 1px white;
+    height: 100%;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+img.profileicon
+{
+    border-radius: 2px;
+    border: solid 1px white;
+    margin: 6px;
+}
+div.spreadsheetview
+{
+    padding: 20px;
+    width: 100%
+    height: 100%;
+    background-color: #ece9d8;
+}
+table.spreadsheetview
+{
+    width: 100%;
+    border: ridge 2px #c8d5e2;
+    background-color: #fefefe;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+th
+{
+    font-weight: normal;
+    text-align: left;
+    padding-left: 8px;
+    background-color: #ebeadb;
+    border: ridge 2px #cfcbbb;
+}
+td
+{
+    border: solid 1px #f0eddf;
+    padding-left: 4px;
+}
+a {
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 2px;
+    margin: 2px;
+    border: solid 1px gray;
+    background: linear-gradient(to bottom, #b4e391 0%,#61c419 50%,#b4e391 100%);
+}
+button {
+    border: solid 1px #1c3f72;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #f7fbfd 0%,#f7fbfd 88%,#d5cdc3 100%);
+    background: linear-gradient(to right, #f7fbfd 0%,#f7fbfd 93%,#d5cdc3 100%);
+    color: black;
+    height: 16px;
+    font-size: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+div.yesnowindow {
+    font-size: 12px;
+    text-align: center;
+    width: 200px;
+    height: 60px;
+}
+div.editorderwindow {
+    width: 400px;
+}
+input.tableinputfield {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: none;
+}
+</style>
+<script>
+function toggleVisible(event, id, defaultDisplay)
+{
+    var element = document.getElementById(id);
+    if (element.style.display != "none") {
+        element.style.display = "none";
+    } else {
+        element.style.display = defaultDisplay;
+    }
+}
+function updateClock()
+{
+    var clockText = document.getElementById("clock");
+    var now = new Date(Date.now());
+    var hours = (now.getHours() % 12).toString().padStart(2, '0');
+    var minutes = now.getMinutes().toString().padStart(2, '0');
+    var ampm = (now.getHours() >= 12) ? "PM" : "AM";
+    var timestr = hours + ':' + minutes + ' ' + ampm;
+    clockText.innerText = timestr;
+}
+function hideId(id)
+{
+    var element = document.getElementById(id);
+    element.style.display = "none";
+}
+function deleteWindow(event)
+{
+    var grand2parent = event.path[3];
+    var grandparent = event.path[2];
+    grand2parent.removeChild(grandparent);
+}
+function handleWindowDragStart(event)
+{
+    event.target.onmousemove = handleWindowDrag;
+    event.target.onmouseup = handleWindowDragEnd;
+    event.target.onmouseleave = handleWindowDragEnd;
+    moveOtherWindowsToBg(event.target.parentNode);
+}
+function handleWindowDragEnd(event)
+{
+    event.target.onmousemove = null;
+}
+function handleWindowDrag(event)
+{
+    var windowElem = event.path[1];
+    var origX = parseInt(windowElem.style.left) || 0;
+    var origY = parseInt(windowElem.style.top) || 0;
+    var newX = origX + event.movementX;
+    var newY = origY + event.movementY;
+    windowElem.style.left = newX + "px";
+    windowElem.style.top = newY + "px";
+}
+function moveOtherWindowsToBg(notThisOne)
+{
+    var windows = document.getElementsByClassName("mainwindow");
+    for (var windex = 0; windex < windows.length; windex++)
+    {
+        if (windows[windex] != notThisOne)
+        {
+            windows[windex].style.setProperty("z-index", 0);
+        }
+        else
+        {
+            windows[windex].style.setProperty("z-index", 2);
+        }
+    }
+}
+function makeWindow(title, contents, overlayClass)
+{
+    var windowPane = document.createElement("div");
+    windowPane.classList.add("mainwindow");
+    if (overlayClass) {
+        windowPane.classList.add(overlayClass);
+    }
+    windowPane.style.top = Math.random() * 50 + 100 + "px";
+    windowPane.style.left = Math.random() * 50 + 150 + "px";
+    windowPane.style.setProperty("z-index", 0);
+    windowPane.draggable = false;
+    var topBar = document.createElement("div");
+    topBar.classList.add("windowtopbar");
+    topBar.onmousedown = handleWindowDragStart;
+    topBar.onmouseup = handleWindowDragEnd;
+    topBar.innerText = title;
+    var xButton = document.createElement("div");
+    xButton.classList.add("windowXbutton");
+    xButton.onclick = deleteWindow;
+    xButton.innerHTML = "&#215;";
+    // var content = document.createElement("div");
+    contents.classList.add("windowcontent");
+    // content.appendChild(contents);
+    windowPane.appendChild(topBar);
+    topBar.appendChild(xButton);
+    windowPane.appendChild(contents);
+    document.body.appendChild(windowPane);
+    moveOtherWindowsToBg(windowPane);
+    hideId("menu");
+    return windowPane;
+}
+function showInvoices()
+{
+    fetch("/invoices")
+    .then(function(response) {
+        return response.json();
+    })
+    .then(viewInvoicesWindow)
+    .catch(function(reason)
+    {
+        console.log(reason);
+        okayCancelWindow("Could not load invoices", function() {}, true);
+    });
+}
+function showInvoice(orderId)
+{
+    // TODO: Change the path formatting when the real backend is implemented
+    fetch("/invoices_"+orderId)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(viewInvoiceWindow)
+    .catch(() => okayCancelWindow("Could not load order", () => {}, true));
+}
+function viewInvoicesWindow(invoices)
+{
+    var container = document.createElement("div");
+    container.classList.add("spreadsheetview");
+    var table = document.createElement("table");
+    container.appendChild(table);
+    table.classList.add("spreadsheetview");
+    var thead = document.createElement("tr");
+    table.appendChild(thead);
+    var columnLabels = ["Order Id", "Customer Name", "Purchase Date", "Amount", "Actions"];
+    for (var coldex in columnLabels)
+    {
+        var th = document.createElement("th");
+        th.innerText = columnLabels[coldex];
+        thead.appendChild(th);
+    }
+    function addRow(orderId, custName, date, amount)
+    {
+        var row = document.createElement("tr");
+        table.appendChild(row);
+        for (var arg in arguments)
+        {
+            var td = document.createElement("td");
+            td.innerText = arguments[arg];
+            row.appendChild(td);
+        }
+        var actionsCell = document.createElement("td");
+        row.appendChild(actionsCell);
+        var buttons = {
+            "View/Edit": function() { showInvoice(orderId); },
+            "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
+        }
+        for (var label in buttons)
+        {
+            var button = document.createElement("button");
+            button.innerText = label;
+            button.onclick = buttons[label];
+            actionsCell.appendChild(button);
+        }
+    }
+    var formatter = moneyFormatter();
+    for (var invoice in invoices)
+    {
+        var row = invoices[invoice];
+        var date = new Date(row["date"]).toLocaleDateString();
+        var amount = formatter.format(row["amount"]);
+        addRow(row["orderId"], row["customer"], date, amount);
+    }
+    makeWindow("Orders", container);
+}
+function moneyFormatter()
+{
+    return Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+    });
+}
+function addRowVTable(table, key, valueCell)
+{
+    var tr = document.createElement("tr");
+    table.appendChild(tr);
+    var th = document.createElement("th");
+    tr.appendChild(th);
+    th.innerText = key;
+    th.style.width = "30%";
+    var td = document.createElement("td");
+    tr.appendChild(td);
+    td.appendChild(valueCell);
+}
+function addRowVTableTxt(table, key, value)
+{
+    var valElem = document.createElement("p");
+    valElem.innerText = value;
+    addRowVTable(table, key, valElem);
+    return valElem;
+}
+function addRowVTableInput(table, key, defaultValue, name, type="text")
+{
+    var valElem = document.createElement("input");
+    valElem.type = type;
+    valElem.value = defaultValue;
+    valElem.name = name;
+    valElem.classList.add("tableinputfield");
+    addRowVTable(table, key, valElem);
+    return valElem;
+}
+function viewInvoiceWindow(invoice)
+{
+    var container = document.createElement("div");
+    container.classList.add("spreadsheetview");
+    var summaryTbl = document.createElement("table");
+    container.appendChild(summaryTbl);
+    summaryTbl.classList.add("spreadsheetview");
+
+
+    addRowVTableTxt(summaryTbl, "Customer Name", invoice["customer"]);
+    var date = new Date(invoice["date"]).toLocaleString();
+    addRowVTableTxt(summaryTbl, "Purchase Date", date);
+    var mnyFmt = moneyFormatter();
+    var form = document.createElement("form");
+    container.append(form);
+    for (var item in invoice["items"])
+    {
+        let it = invoice["items"][item];
+        let itemTbl = document.createElement("table");
+        form.appendChild(itemTbl);
+        itemTbl.classList.add("spreadsheetview");
+        let skuInput = addRowVTableInput(itemTbl, "SKU", it["sku"], it["sku"]+"_sku");
+        let name = addRowVTableTxt(itemTbl, "Name", it["name"]);
+        let model = addRowVTableTxt(itemTbl, "Model", it["model"] || "");
+        let size = addRowVTableTxt(itemTbl, "Size", it["size"] || "");
+        let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["manufacturer"] || "");
+        let quantity = addRowVTableInput(itemTbl, "Quantity", it["quantity"], it["sku"]+"_quantity");
+        let price = addRowVTableTxt(itemTbl, "Price", mnyFmt.format(it["price"]));
+        let priceVal = it["price"];
+        let total = addRowVTableTxt(itemTbl, "Total", mnyFmt.format(it["total"]));
+        let deleteBtn = document.createElement("button");
+        deleteBtn.innerText = "Delete";
+        itemTbl.appendChild(deleteBtn);
+        deleteBtn.onclick = (ev) => itemTbl.parentNode.removeChild(itemTbl);
+        function recalcTotal(price, quantity)
+        {
+            var newTotal = price * quantity;
+            if (isNaN(newTotal))
+                total.innerText = "Unknown";
+            else
+                total.innerText = mnyFmt.format(price * quantity);
+        }
+        skuInput.oninput = (ev) =>
+        {
+            // TODO: path format
+            fetch("/products_" + ev.target.value)
+            .then((response) => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw "oops";
+            })
+            .then((json) => {
+                name.innerText = json["name"];
+                model.innerText = json["model"] || "";
+                size.innerText = json["size"] || "";
+                manufacturer.innerText = json["manufacturer"] || "";
+                priceVal = json["price"];
+                price.innerText = mnyFmt.format(json["price"]);
+                recalcTotal(json["price"], parseInt(quantity.value));
+            })
+            .catch((reason) => {
+                name.innerText = "Invalid SKU";
+                model.innerText = "";
+                size.innerText = "";
+                manufacturer.innerText = "";
+                price.innerText = "";
+                total.innerText = "";
+            });
+        };
+        quantity.oninput = (ev) => {
+            let newQuan = parseInt(ev.target.value);
+            recalcTotal(priceVal, newQuan);
+        }
+    }
+    var buttonContainer = document.createElement("div");
+    container.appendChild(buttonContainer);
+    buttonContainer.style.margin = "5px";
+    var save = document.createElement("button");
+    buttonContainer.appendChild(save);
+    save.innerText = "Save"
+    var cancel = document.createElement("button");
+    buttonContainer.appendChild(cancel);
+    cancel.innerText = "Cancel";
+    var win = makeWindow("Order #"+invoice["orderId"], container, "editorderwindow");
+    save.onclick = function()
+    {
+        var fd = new FormData(form);
+        for (var pair of fd.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+        fetch("/invoices_"+invoice["orderId"], {
+            method: "PUT",
+            body: fd
+        })
+        .then((response) => {
+            console.log(response);
+            if (response.ok)
+                okayCancelWindow("Changes saved", () => {}, true);
+            else
+                okayCancelWindow("Could not save (invalid data)", () => {}, true);
+        })
+        .catch((reason) => {
+            console.log(reason);
+            okayCancelWindow("Could not save (network issue)", () => {}, true);
+        });
+        win.parentNode.removeChild(win);
+    }
+    cancel.onclick = function()
+    {
+        win.parentNode.removeChild(win);
+    }
+}
+function createInvoiceWindow()
+{
+    var container = document.createElement("div");
+
+    makeWindow("New Order", container);
+}
+function viewProductsWindow()
+{
+    var container = document.createElement("div");
+
+    makeWindow("Products", container);
+}
+function okayCancelWindow(confText, yesaction, nocancel)
+{
+    var container = document.createElement("div");
+    container.style.backgroundColor = "#ebeadb";
+    var text = document.createElement("div");
+    container.appendChild(text);
+    text.innerText = confText;
+    text.style.margin = "10px"; 
+    var okay = document.createElement("button");
+    container.appendChild(okay);
+    okay.innerText = "Okay";
+    if (!nocancel) {
+        var cancel = document.createElement("button");
+        container.appendChild(cancel);
+        cancel.innerText = "Cancel";
+    }
+    var win = makeWindow("", container, "yesnowindow");
+    okay.onclick = function()
+    {
+        win.parentNode.removeChild(win);
+        yesaction();
+    };
+    if (!nocancel) {
+        cancel.onclick = function() {
+            win.parentNode.removeChild(win);
+        };
+    }
+}
+function deleteInvoice(orderId)
+{
+    fetch("/invoices/"+orderId, {
+        method: "DELETE"
+    }).then((response) => {
+        if (response.ok)
+            okayCancelWindow("Order #"+orderId+" deleted", () => {}, true);
+        else
+            throw "Invalid response";
+    }).catch((reason) => {
+        okayCancelWindow("Could not delete order", () => {}, true);
+    })
+}
+</script>
+</head>
+<body onload="updateClock(); setInterval(updateClock, 2000);">
+<div class="menu" id="menu" style="display: none;" onmouseleave="hideId('menu');">
+    <div class="menutopbar">
+        <img src="donut.png" height="48px" width="48px" alt="" class="profileicon" style="float: left">
+        <span style="color: white; float: left; margin-top: 20px;">KVZ Tires and Donuts</span>
+    </div>
+    <hr class="menuorangegradient"/>
+    <div class="menucontents">
+        <div class="menuleft">
+            <div class="menuitem" onclick="showInvoices();">
+                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
+                <div class="menuitemtext">
+                    <span class="menuitemtitle">Orders</span>
+                    <br/>
+                    <span class="menuitemsubtext">View Orders</span>
+                </div>
+            </div>
+            <div class="menuitem" onclick="createInvoiceWindow();">
+                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
+                <div class="menuitemtext">
+                    <span class="menuitemtitle">New Order</span>
+                    <br/>
+                    <span class="menuitemsubtext">Make a new order</span>
+                </div>
+            </div>
+            <div class="menuitem" onclick="viewProductsWindow();">
+                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
+                <div class="menuitemtext">
+                    <span class="menuitemtitle">Products</span>
+                    <br/>
+                    <span class="menuitemsubtext">View Products</span>
+                </div>
+            </div>
+            <div class="menuitem" onclick="createProductWindow();">
+                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
+                <div class="menuitemtext">
+                    <span class="menuitemtitle">New Product</span>
+                    <br/>
+                    <span class="menuitemsubtext">Make a new product</span>
+                </div>
+            </div>
+            <div class="menuitem" onclick="createCustomerWindow();">
+                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
+                <div class="menuitemtext">
+                    <span class="menuitemtitle">New Customer</span>
+                    <br/>
+                    <span class="menuitemsubtext">Create a new customer</span>
+                </div>
+            </div>
+            <div class="menuitem" onclick="showCustomers();">
+                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
+                <div class="menuitemtext">
+                    <span class="menuitemtitle">Customers</span>
+                    <br/>
+                    <span class="menuitemsubtext">View current customers</span>
+                </div>
+            </div>
+        </div><div class="menuright">
+        </div>
+    </div>
+    <div class="menubottombar">
+
+    </div>
+</div>
+<div class="bottombar">
+    <div class="menubutton" onclick="toggleVisible(event, 'menu', 'block');">
+    <img src="donut_nobg.png" height="20px" width="20px" alt="" style="float:left; margin-left: 5px;"> donut</div>
+    <div class="taskbar">
+    </div>
+    <div class="clocktray">
+        <div id="clock">22:11 PM</div>
+    </div>
+</div>
+</body>
+</html>

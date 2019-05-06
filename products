@@ -1,0 +1,12 @@
+[
+{
+    "sku": 1234,
+    "product": "Donut Holes",
+    "price": 1.99
+},
+{
+    "sku": 2345,
+    "product": "Monster Truck Tires",
+    "price": 1200.00
+}
+]
