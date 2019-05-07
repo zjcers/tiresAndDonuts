@@ -303,27 +303,51 @@ function viewInvoiceWindow(invoice, orderId)
     buttonContainer.appendChild(cancel);
     cancel.innerText = "Cancel";
     var win = makeWindow("Order #"+orderId, container, "editorderwindow");
+    var fd_original = new FormData(form);
+    var originals = []
+    var temp_string = ""
+    for (var pair of fd_original.entries()) {
+        temp_string += (pair[1]+" ")
+        if(pair[0].includes("quantity")){
+          originals.push(temp_string.split(" "));
+          temp_string= "";
+        }
+    }
     save.onclick = function()
     {
         var fd = new FormData(form);
+        var updates = []
+        var temp_string = ""
         for (var pair of fd.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]);
+            temp_string += (pair[1]+" ")
+            if(pair[0].includes("quantity")){
+              updates.push(temp_string.split(" "));
+              temp_string= "";
+            }
         }
-        fetch("/invoices_"+invoice["orderId"], {
-            method: "PUT",
-            body: fd
-        })
-        .then((response) => {
-            console.log(response);
-            if (response.ok)
-                okayCancelWindow("Changes saved", () => {}, true);
-            else
-                okayCancelWindow("Could not save (invalid data)", () => {}, true);
-        })
-        .catch((reason) => {
-            console.log(reason);
-            okayCancelWindow("Could not save (network issue)", () => {}, true);
-        });
+        for(i in updates){
+          if(updates[i][0] !== originals[i][0] || updates[i][1] !== originals[i][1]){
+            var orig_sku = originals[i][0]
+            var orig_quan = originals[i][1]
+            var new_sku = updates[i][0]
+            var new_quan = updates[i][1]
+            var args = "?orderId="+orderId+"&orig_sku="+orig_sku+"&orig_quan="+orig_quan+"&new_sku="+new_sku+"&new_quan="+new_quan;
+            alert(args)
+            var url = "php/updateItemsSold.php"+args;
+            alert(url)
+            fetch(url)
+            .then((response) => {
+                if (response.ok)
+                    okayCancelWindow("Changes saved", () => {}, true);
+                else
+                    okayCancelWindow("Could not save (invalid data)", () => {}, true);
+            })
+            .catch((reason) => {
+                console.log(reason);
+                okayCancelWindow("Could not save (network issue)", () => {}, true);
+            });
+          }
+        }
         win.parentNode.removeChild(win);
     }
     cancel.onclick = function()
