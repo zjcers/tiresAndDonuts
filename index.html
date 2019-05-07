@@ -332,9 +332,9 @@ function viewInvoiceWindow(invoice, orderId)
             var new_sku = updates[i][0]
             var new_quan = updates[i][1]
             var args = "?orderId="+orderId+"&orig_sku="+orig_sku+"&orig_quan="+orig_quan+"&new_sku="+new_sku+"&new_quan="+new_quan;
-            alert(args)
+
             var url = "php/updateItemsSold.php"+args;
-            alert(url)
+      
             fetch(url)
             .then((response) => {
                 if (response.ok)
