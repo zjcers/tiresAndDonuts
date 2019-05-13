@@ -537,6 +537,53 @@ function deleteInvoice(orderId)
         okayCancelWindow("Could not delete order", () => {}, true);
     })
 }
+function createCustomerWindow()
+{
+  var container = document.createElement("div");
+  container.classList.add("spreadsheetview");
+
+  var mnyFmt = moneyFormatter();
+  var form = document.createElement("form");
+  container.append(form);
+
+  let itemTbl = document.createElement("table");
+  form.appendChild(itemTbl);
+  itemTbl.classList.add("spreadsheetview");
+  let firstNameInput = addRowVTableInput(itemTbl, "FIRST NAME", "", ""+"_firstName");
+  let lastNameInput = addRowVTableInput(itemTbl, "LAST NAME", "", ""+"_lastName");
+  let phone = addRowVTableInput(itemTbl, "PHONE", "", ""+"_phone");
+
+
+  var buttonContainer = document.createElement("div");
+  container.appendChild(buttonContainer);
+  buttonContainer.style.margin = "5px";
+  var save = document.createElement("button");
+  buttonContainer.appendChild(save);
+  save.innerText = "Save"
+
+  var win = makeWindow("New Customer", container);
+
+  save.onclick = function()
+  {
+      var fd = new FormData(form);
+      var args = "?fName="+fd.get("_firstName")+"&lName="+fd.get("_lastName")+"&phone="+fd.get("_phone");
+      var url = "php/addCustomer.php"+args;
+      alert(url);
+
+      fetch(url)
+      .then((response) => {
+          if (response.ok)
+              okayCancelWindow("Changes saved", () => {}, true);
+          else
+              okayCancelWindow("Could not save (invalid data)", () => {}, true);
+      })
+      .catch((reason) => {
+          console.log(reason);
+          okayCancelWindow("Could not save (network issue)", () => {}, true);
+      });
+      win.parentNode.removeChild(win)
+  }
+}
 </script>
 </head>
 <body onload="updateClock(); setInterval(updateClock, 2000);">
