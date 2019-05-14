@@ -5,18 +5,18 @@
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <script>
-function wait1second() {
+function wait1second()
+{
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
     }, 1000);
   });
 }
-
-async function asyncSleep() {
+async function asyncSleep()
+{
   var result = await wait1second();
 }
-
 function toggleVisible(event, id, defaultDisplay)
 {
     var element = document.getElementById(id);
@@ -436,10 +436,11 @@ function viewProductsWindow(products)
           td.innerText = arguments[arg];
           row.appendChild(td);
       }
-      var actionsCell = document.createElement("td");
-      row.appendChild(actionsCell);
       // TODO: do we want buttons/actions for products?
-      /*var buttons = {
+      /*var actionsCell = document.createElement("td");
+      row.appendChild(actionsCell);
+
+      var buttons = {
           "View/Edit": function() { showInvoice(orderId); },
           "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
       }
@@ -504,10 +505,10 @@ function viewCustomersWindow(customers)
           td.innerText = arguments[arg];
           row.appendChild(td);
       }
-      var actionsCell = document.createElement("td");
-      row.appendChild(actionsCell);
       // TODO: do we want buttons/actions for customers?
-      /*var buttons = {
+      /*var actionsCell = document.createElement("td");
+      row.appendChild(actionsCell);
+      var buttons = {
           "View/Edit": function() { showInvoice(orderId); },
           "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
       }
