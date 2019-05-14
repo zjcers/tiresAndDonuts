@@ -602,8 +602,6 @@ function createCustomerWindow()
       var fd = new FormData(form);
       var args = "?fName="+fd.get("_firstName")+"&lName="+fd.get("_lastName")+"&phone="+fd.get("_phone");
       var url = "php/addCustomer.php"+args;
-      alert(url);
-
       fetch(url)
       .then((response) => {
           if (response.ok)
@@ -660,8 +658,6 @@ function createProductWindow()
 
       var args = name+"&"+inventory+"&"+price+"&"+type+"&"+model+"&"+manf+"&"+size;
       var url = "php/addProduct.php?"+args;
-      alert(url);
-
       fetch(url)
       .then((response) => {
           if (response.ok)
