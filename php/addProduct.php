@@ -27,7 +27,14 @@ else{
   $sql = "INSERT INTO PRODUCT (NAME, INVENTORY, PRICE, PRODUCT_TYPE, TIRE_MODEL, TIRE_MANF, TIRE_SIZE)
   VALUES('$name', '$inventory', '$price', '$type', NULL, NULL, NULL)";
 }
+$conn->begin_transaction();
 $result = $conn->query($sql);
+if($result){
+  $conn->commit();
+}
+else{
+  $conn->rollback();
+}
 echo $result;
 
 $conn->close();

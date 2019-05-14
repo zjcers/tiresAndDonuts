@@ -17,8 +17,9 @@ if ($conn->connect_error) {
 
 $sql = "INSERT INTO CUSTOMER (FIRST_NAME, LAST_NAME, PHONE)
 VALUES('$fname', '$lname', '$phone')";
+$conn->begin_transaction();
 $result = $conn->query($sql);
-
+$conn->commit();
 echo $result;
 
 $conn->close();

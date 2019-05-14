@@ -18,6 +18,7 @@ WHERE PURCHASE.PURCHASE_ID = '$orderId'
 AND CUSTOMER.CUSTOMER_ID = PURCHASE.CUSTOMER_ID
 AND PURCHASE.PURCHASE_ID = SOLDITEMS.PURCHASE_ID
 AND SOLDITEMS.SKU = PRODUCT.SKU";
+$conn->begin_transaction();
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -25,8 +26,10 @@ if ($result->num_rows > 0) {
     while($r = mysqli_fetch_assoc($result)) {
       $rows[] = $r;
     }
+    $conn->commit();
     echo json_encode($rows);
   }else {
+    $conn->rollback();
     trigger_error('Invalid query: ' . $conn->error);
     echo "0 results";
 }
