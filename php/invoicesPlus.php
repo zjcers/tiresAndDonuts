@@ -11,24 +11,38 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+function getName($sql) {
+  global $orderId;
+  $query = "SELECT FIRST_NAME, LAST_NAME
+    FROM CUSTOMER, PURCHASE
+    WHERE PURCHASE_ID = $orderId
+    AND CUSTOMER.CUSTOMER_ID = PURCHASE.CUSTOMER_ID";
+  if ($result = $sql->query($query)) {
+    if ($result->num_rows == 1) {
+      $name = $result->fetch_assoc();
+      $result->close();
+      return $name;
+    }
+    var_dump($result);
+  }
+  die("Could not retrieve name for customer");
+}
 
-$sql = "SELECT CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME, PRODUCT.*, SOLDITEMS.AMOUNT, PURCHASE.AMOUNT AS TOTAL
-FROM PURCHASE, SOLDITEMS, CUSTOMER, PRODUCT
+$output = getName($conn);
+
+$sql = "SELECT PRODUCT.*, SOLDITEMS.AMOUNT, PURCHASE.AMOUNT AS TOTAL
+FROM PURCHASE, SOLDITEMS, PRODUCT
 WHERE PURCHASE.PURCHASE_ID = '$orderId'
-AND CUSTOMER.CUSTOMER_ID = PURCHASE.CUSTOMER_ID
 AND PURCHASE.PURCHASE_ID = SOLDITEMS.PURCHASE_ID
 AND SOLDITEMS.SKU = PRODUCT.SKU";
 $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    $rows = array();
-    while($r = mysqli_fetch_assoc($result)) {
-      $rows[] = $r;
-    }
-    echo json_encode($rows);
-  }else {
-    trigger_error('Invalid query: ' . $conn->error);
-    echo "0 results";
+$rows = array();
+while($r = mysqli_fetch_assoc($result)) {
+  $rows[] = $r;
 }
+$result->close();
+$output["items"] = $rows;
+echo json_encode($output);
 $conn->close();
 ?>

@@ -178,6 +178,10 @@ function viewInvoicesWindow(invoices)
         var name = row["FIRST_NAME"] + " " + row["LAST_NAME"];
         addRow(row["PURCHASE_ID"], name, date, amount);
     }
+    let newBtn = document.createElement("button");
+    newBtn.innerText = "New...";
+    newBtn.onclick = createInvoiceWindow;
+    container.appendChild(newBtn);
     makeWindow("Orders", container);
 }
 function moneyFormatter()
@@ -220,29 +224,43 @@ function viewInvoiceWindow(invoice, orderId)
 {
     var container = document.createElement("div");
     container.classList.add("spreadsheetview");
+    var form = document.createElement("form");
+    container.appendChild(form);
+
     var summaryTbl = document.createElement("table");
-    container.appendChild(summaryTbl);
+    form.appendChild(summaryTbl);
     summaryTbl.classList.add("spreadsheetview");
-
-
-    addRowVTableTxt(summaryTbl, "Customer Name", invoice[0]["FIRST_NAME"] + " " + invoice[0]["LAST_NAME"]);
+    if (!invoice) {
+        invoice = {
+            "FIRST_NAME": "John",
+            "LAST_NAME": "Smith",
+            "items": []
+        }
+    }
+    let firstNameInput = addRowVTableInput(summaryTbl, "First Name", invoice["FIRST_NAME"], "FIRST_NAME");
+    let lastNameInput = addRowVTableInput(summaryTbl, "Last Name", invoice["LAST_NAME"], "LAST_NAME");
 
     var mnyFmt = moneyFormatter();
-    var form = document.createElement("form");
-    container.append(form);
-
-    for (var item in invoice)
+    if (orderId)
     {
-        let it = invoice[item];
+        let orderIdInput = document.createElement("input");
+        orderIdInput.name = "orderId";
+        orderIdInput.type = "hidden";
+        orderIdInput.value = orderId;
+        form.appendChild(orderIdInput);
+    }
+
+    function addLineItem (it)
+    {
         let itemTbl = document.createElement("table");
         form.appendChild(itemTbl);
         itemTbl.classList.add("spreadsheetview");
-        let skuInput = addRowVTableInput(itemTbl, "SKU", it["SKU"], it["SKU"]+"_sku");
-        let name = addRowVTableTxt(itemTbl, "Name", it["NAME"]);
-        let model = addRowVTableTxt(itemTbl, "Model", it["TIRE_MODEL"] || "N/A");
-        let size = addRowVTableTxt(itemTbl, "Size", it["TIRE_SIZE"] || "N/A");
-        let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["TIRE_MANF"] || "N/A");
-        let quantity = addRowVTableInput(itemTbl, "Quantity", it["AMOUNT"], it["AMOUNT"]+"_quantity");
+        let skuInput = addRowVTableInput(itemTbl, "SKU", it["SKU"], "SKU[]");
+        let name = addRowVTableTxt(itemTbl, "Name", it["NAME"], "NAME[]");
+        let model = addRowVTableTxt(itemTbl, "Model", it["TIRE_MODEL"] || "N/A", "TIRE_MODEL[]");
+        let size = addRowVTableTxt(itemTbl, "Size", it["TIRE_SIZE"] || "N/A", "TIRE_SIZE[]");
+        let manufacturer = addRowVTableTxt(itemTbl, "Manufacturer", it["TIRE_MANF"] || "N/A", "TIRE_MANF[]");
+        let quantity = addRowVTableInput(itemTbl, "Quantity", it["AMOUNT"], "AMOUNT[]");
         let price = addRowVTableTxt(itemTbl, "Price", mnyFmt.format(it["PRICE"]));
         let priceVal = it["PRICE"];
         let quantityVal = it["AMOUNT"]
@@ -292,6 +310,18 @@ function viewInvoiceWindow(invoice, orderId)
             recalcTotal(priceVal, newQuan);
         }
     }
+    function addEmptyLineItem() {
+        addLineItem({
+            "SKU": 0,
+            "NAME": "", 
+            "AMOUNT": 0,
+            "PRICE": 0.0
+        });
+    }
+    for (var item in invoice["items"]) {
+        let it = invoice["items"][item];
+        addLineItem(it);
+    }
 
     var buttonContainer = document.createElement("div");
     container.appendChild(buttonContainer);
@@ -302,52 +332,32 @@ function viewInvoiceWindow(invoice, orderId)
     var cancel = document.createElement("button");
     buttonContainer.appendChild(cancel);
     cancel.innerText = "Cancel";
-    var win = makeWindow("Order #"+orderId, container, "editorderwindow");
-    var fd_original = new FormData(form);
-    var originals = []
-    var temp_string = ""
-    for (var pair of fd_original.entries()) {
-        temp_string += (pair[1]+" ")
-        if(pair[0].includes("quantity")){
-          originals.push(temp_string.split(" "));
-          temp_string= "";
-        }
-    }
+    let append = document.createElement("button");
+    append.innerText = "Add...";
+    append.onclick = addEmptyLineItem;
+    buttonContainer.appendChild(append);
+    let title = orderId ? ("Order #"+orderId) : "New Order";
+    var win = makeWindow(title, container, "editorderwindow");
     save.onclick = function()
     {
         var fd = new FormData(form);
-        var updates = []
-        var temp_string = ""
-        for (var pair of fd.entries()) {
-            temp_string += (pair[1]+" ")
-            if(pair[0].includes("quantity")){
-              updates.push(temp_string.split(" "));
-              temp_string= "";
+        var url = "php/updateItemsSold.php";
+        fetch(url, {
+            "method": "POST",
+            "body": fd,
+        })
+        .then((response) => {
+            if (response.ok)
+                okayCancelWindow("Changes saved", () => {}, true);
+            else {
+                console.log(response.text());
+                okayCancelWindow("Could not save (invalid data)", () => {}, true);
             }
-        }
-        for(i in updates){
-          if(updates[i][0] !== originals[i][0] || updates[i][1] !== originals[i][1]){
-            var orig_sku = originals[i][0]
-            var orig_quan = originals[i][1]
-            var new_sku = updates[i][0]
-            var new_quan = updates[i][1]
-            var args = "?orderId="+orderId+"&orig_sku="+orig_sku+"&orig_quan="+orig_quan+"&new_sku="+new_sku+"&new_quan="+new_quan;
-
-            var url = "php/updateItemsSold.php"+args;
-
-            fetch(url)
-            .then((response) => {
-                if (response.ok)
-                    okayCancelWindow("Changes saved", () => {}, true);
-                else
-                    okayCancelWindow("Could not save (invalid data)", () => {}, true);
-            })
-            .catch((reason) => {
-                console.log(reason);
-                okayCancelWindow("Could not save (network issue)", () => {}, true);
-            });
-          }
-        }
+        })
+        .catch((reason) => {
+            console.log(reason);
+            okayCancelWindow("Could not save (network issue)", () => {}, true);
+        });
         win.parentNode.removeChild(win);
     }
     cancel.onclick = function()
@@ -357,9 +367,7 @@ function viewInvoiceWindow(invoice, orderId)
 }
 function createInvoiceWindow()
 {
-    var container = document.createElement("div");
-
-    makeWindow("New Order", container);
+    viewInvoiceWindow();
 }
 function showProducts()
 {
@@ -554,14 +562,6 @@ function deleteInvoice(orderId)
                     <span class="menuitemtitle">Orders</span>
                     <br/>
                     <span class="menuitemsubtext">View Orders</span>
-                </div>
-            </div>
-            <div class="menuitem" onclick="createInvoiceWindow();">
-                <img src="bliss.jpg" width="50px" height="50px" class="menuitemicon" alt="">
-                <div class="menuitemtext">
-                    <span class="menuitemtitle">New Order</span>
-                    <br/>
-                    <span class="menuitemsubtext">Make a new order</span>
                 </div>
             </div>
             <div class="menuitem" onclick="showProducts();">
