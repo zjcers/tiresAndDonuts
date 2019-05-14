@@ -83,13 +83,7 @@ function createNewInvoice($sql) {
     validateRequest();
     $sql->begin_transaction();
     $custId = getCustomerId($sql);
-    $amount = 0.0;
-    if (array_key_exists("AMOUNT", $_POST)) {
-        foreach ($_POST["AMOUNT"] as $value) {
-            $value += floatval($value);
-        }
-    }
-    $insertQuery = "INSERT INTO PURCHASE (CUSTOMER_ID, AMOUNT) VALUES ($custId, $amount)";
+    $insertQuery = "INSERT INTO PURCHASE (CUSTOMER_ID) VALUES ($custId)";
     if (!$sql->query($insertQuery)) {
         error("Could not insert purchase: " . $sql->error);
     }
