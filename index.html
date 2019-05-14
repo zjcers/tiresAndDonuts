@@ -364,7 +364,14 @@ function viewInvoiceWindow(invoice, orderId)
             fetch(url)
             .then((response) => {
                 if (response.ok)
-                    okayCancelWindow("Changes saved", () => {}, true);
+                    okayCancelWindow("Changes saved", function() {
+                      var element = document.getElementsByClassName("Invoices");
+                      //for (var invoice in element)   //Just do first one in list
+                      {
+                        element[0].parentNode.removeChild(element[0]);
+                      }
+                      asyncSleep().then(showInvoices());
+                    }, true);
                 else
                     okayCancelWindow("Could not save (invalid data)", () => {}, true);
             })
