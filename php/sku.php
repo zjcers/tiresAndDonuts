@@ -13,6 +13,7 @@ if ($conn->connect_error) {
 }
 
 $sql = "SELECT * FROM PRODUCT WHERE SKU = '$sku'";
+$conn->begin_transaction();
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -20,8 +21,10 @@ if ($result->num_rows > 0) {
     while($r = mysqli_fetch_assoc($result)) {
       $rows[] = $r;
     }
+    $conn->commit();
     echo json_encode($rows);
   }else {
+    $conn->rollback();
     trigger_error('Invalid query: ' . $conn->error);
     echo "0 results";
 }

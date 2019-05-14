@@ -2,7 +2,21 @@
 <head>
 <title>KVZ Tires and Donuts</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
 <script>
+function wait1second()
+{
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 1000);
+  });
+}
+async function asyncSleep()
+{
+  var result = await wait1second();
+}
 function toggleVisible(event, id, defaultDisplay)
 {
     var element = document.getElementById(id);
@@ -131,6 +145,7 @@ function showInvoice(orderId)
 function viewInvoicesWindow(invoices)
 {
     var container = document.createElement("div");
+    container.setAttribute("id", "Invoice");
     container.classList.add("spreadsheetview");
     var table = document.createElement("table");
     container.appendChild(table);
@@ -157,8 +172,19 @@ function viewInvoicesWindow(invoices)
         var actionsCell = document.createElement("td");
         row.appendChild(actionsCell);
         var buttons = {
-            "View/Edit": function() { showInvoice(orderId); },
-            "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
+          "View/Edit": function() { showInvoice(orderId); },
+          "Delete": function() {
+            okayCancelWindow("Delete order " + orderId + "?", function()
+            {
+              var element = document.getElementsByClassName("Invoices");
+              //for (var invoice in element)   //Just do first one in list
+              {
+                element[0].parentNode.removeChild(element[0]);
+              }
+              deleteInvoice(orderId);
+              asyncSleep().then(showInvoices());
+            });
+          }
         }
         for (var label in buttons)
         {
@@ -182,7 +208,7 @@ function viewInvoicesWindow(invoices)
     newBtn.innerText = "New...";
     newBtn.onclick = createInvoiceWindow;
     container.appendChild(newBtn);
-    makeWindow("Orders", container);
+    makeWindow("Orders", container, "Invoices");
 }
 function moneyFormatter()
 {
@@ -411,10 +437,11 @@ function viewProductsWindow(products)
           td.innerText = arguments[arg];
           row.appendChild(td);
       }
-      var actionsCell = document.createElement("td");
-      row.appendChild(actionsCell);
       // TODO: do we want buttons/actions for products?
-      /*var buttons = {
+      /*var actionsCell = document.createElement("td");
+      row.appendChild(actionsCell);
+
+      var buttons = {
           "View/Edit": function() { showInvoice(orderId); },
           "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
       }
@@ -479,10 +506,10 @@ function viewCustomersWindow(customers)
           td.innerText = arguments[arg];
           row.appendChild(td);
       }
-      var actionsCell = document.createElement("td");
-      row.appendChild(actionsCell);
       // TODO: do we want buttons/actions for customers?
-      /*var buttons = {
+      /*var actionsCell = document.createElement("td");
+      row.appendChild(actionsCell);
+      var buttons = {
           "View/Edit": function() { showInvoice(orderId); },
           "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
       }
@@ -534,17 +561,122 @@ function okayCancelWindow(confText, yesaction, nocancel)
 }
 function deleteInvoice(orderId)
 {
-    fetch("/invoices/"+orderId, {
-        method: "DELETE"
-    }).then((response) => {
+    return fetch("php/deleteInvoice.php?orderId="+orderId)
+    .then((response) => {
         if (response.ok)
             okayCancelWindow("Order #"+orderId+" deleted", () => {}, true);
         else
             throw "Invalid response";
     }).catch((reason) => {
         okayCancelWindow("Could not delete order", () => {}, true);
-    })
+    });
 }
+function createCustomerWindow()
+{
+  var container = document.createElement("div");
+  container.classList.add("spreadsheetview");
+
+  var mnyFmt = moneyFormatter();
+  var form = document.createElement("form");
+  container.append(form);
+
+  let itemTbl = document.createElement("table");
+  form.appendChild(itemTbl);
+  itemTbl.classList.add("spreadsheetview");
+  let firstNameInput = addRowVTableInput(itemTbl, "FIRST NAME", "", ""+"_firstName");
+  let lastNameInput = addRowVTableInput(itemTbl, "LAST NAME", "", ""+"_lastName");
+  let phone = addRowVTableInput(itemTbl, "PHONE", "", ""+"_phone");
+
+
+  var buttonContainer = document.createElement("div");
+  container.appendChild(buttonContainer);
+  buttonContainer.style.margin = "5px";
+  var save = document.createElement("button");
+  buttonContainer.appendChild(save);
+  save.innerText = "Save"
+
+  var win = makeWindow("New Customer", container);
+
+  save.onclick = function()
+  {
+      var fd = new FormData(form);
+      var args = "?fName="+fd.get("_firstName")+"&lName="+fd.get("_lastName")+"&phone="+fd.get("_phone");
+      var url = "php/addCustomer.php"+args;
+      alert(url);
+
+      fetch(url)
+      .then((response) => {
+          if (response.ok)
+              okayCancelWindow("Changes saved", () => {}, true);
+          else
+              okayCancelWindow("Could not save (invalid data)", () => {}, true);
+      })
+      .catch((reason) => {
+          console.log(reason);
+          okayCancelWindow("Could not save (network issue)", () => {}, true);
+      });
+      win.parentNode.removeChild(win)
+  }
+}
+function createProductWindow()
+{
+  var container = document.createElement("div");
+  container.classList.add("spreadsheetview");
+
+  var mnyFmt = moneyFormatter();
+  var form = document.createElement("form");
+  container.append(form);
+
+  let itemTbl = document.createElement("table");
+  form.appendChild(itemTbl);
+  itemTbl.classList.add("spreadsheetview");
+  let name = addRowVTableInput(itemTbl, "NAME", "", "_name");
+  let inventory = addRowVTableInput(itemTbl, "INVENTORY", "", "_inventory");
+  let price = addRowVTableInput(itemTbl, "PRICE", "", "_price");
+  let type = addRowVTableInput(itemTbl, "TYPE", "", "_type");
+  let model = addRowVTableInput(itemTbl, "MODEL", "", "_model");
+  let manf = addRowVTableInput(itemTbl, "MANF", "", "_manf");
+  let size = addRowVTableInput(itemTbl, "SIZE", "", "_size");
+
+  var buttonContainer = document.createElement("div");
+  container.appendChild(buttonContainer);
+  buttonContainer.style.margin = "5px";
+  var save = document.createElement("button");
+  buttonContainer.appendChild(save);
+  save.innerText = "Save"
+
+  var win = makeWindow("New Product", container);
+
+  save.onclick = function()
+  {
+      var fd = new FormData(form);
+      var name = "name="+fd.get("_name");
+      var inventory = "inventory="+fd.get("_inventory");
+      var price = "price="+fd.get("_price");
+      var type = "type="+fd.get("_type");
+      var model = "model="+(fd.get("_model") || "NULL");
+      var manf = "manf="+(fd.get("_manf") || "NULL");
+      var size = "size="+(fd.get("_size") || "NULL");
+
+      var args = name+"&"+inventory+"&"+price+"&"+type+"&"+model+"&"+manf+"&"+size;
+      var url = "php/addProduct.php?"+args;
+      alert(url);
+
+      fetch(url)
+      .then((response) => {
+          if (response.ok)
+              okayCancelWindow("Changes saved", () => {}, true);
+          else
+              okayCancelWindow("Could not save (invalid data)", () => {}, true);
+      })
+      .catch((reason) => {
+          console.log(reason);
+          okayCancelWindow("Could not save (network issue)", () => {}, true);
+      });
+      win.parentNode.removeChild(win)
+  }
+}
+
 </script>
 </head>
 <body onload="updateClock(); setInterval(updateClock, 2000);">

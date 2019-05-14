@@ -1,4 +1,8 @@
 <?php
+$fname = $_GET['fName'];
+$lname = $_GET['lName'];
+$phone = $_GET['phone'];
+
 $servername = "mysql.eecs.ku.edu";
 $username = "kmittenburg";
 $password = "P@\$\$word123";
@@ -11,21 +15,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM PRODUCT ORDER BY PRODUCT_TYPE";
+$sql = "INSERT INTO CUSTOMER (FIRST_NAME, LAST_NAME, PHONE)
+VALUES('$fname', '$lname', '$phone')";
 $conn->begin_transaction();
 $result = $conn->query($sql);
+$conn->commit();
+echo $result;
 
-if ($result->num_rows > 0) {
-    $rows = array();
-    while($r = mysqli_fetch_assoc($result)) {
-      $rows[] = $r;
-    }
-    $conn->commit();
-    echo json_encode($rows);
-  }else {
-    $conn->rollback();
-    trigger_error('Invalid query: ' . $conn->error);
-    echo "0 results";
-}
 $conn->close();
 ?>

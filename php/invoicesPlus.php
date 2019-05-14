@@ -35,6 +35,7 @@ FROM PURCHASE, SOLDITEMS, PRODUCT
 WHERE PURCHASE.PURCHASE_ID = '$orderId'
 AND PURCHASE.PURCHASE_ID = SOLDITEMS.PURCHASE_ID
 AND SOLDITEMS.SKU = PRODUCT.SKU";
+$conn->begin_transaction();
 $result = $conn->query($sql);
 
 $rows = array();
