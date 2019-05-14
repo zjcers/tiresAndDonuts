@@ -1,4 +1,6 @@
 <?php
+$orderId = $_GET['orderId'];
+
 $servername = "mysql.eecs.ku.edu";
 $username = "kmittenburg";
 $password = "P@\$\$word123";
@@ -10,23 +12,25 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-$sql = "SELECT PURCHASE.*, CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME FROM PURCHASE, CUSTOMER
-WHERE PURCHASE.CUSTOMER_ID = CUSTOMER.CUSTOMER_ID";
 $conn->begin_transaction();
 $conn->query('SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
-$result = $conn->query($sql);
+$sql = "DELETE FROM PURCHASE WHERE PURCHASE_ID = '$orderId'";
 
-if ($result->num_rows > 0) {
-    $rows = array();
-    while($r = mysqli_fetch_assoc($result)) {
-      $rows[] = $r;
-    }
+$result = $conn->query($sql);
+if($result){
+  $sql2 = "DELETE FROM SOLDITEMS WHERE PURCHASE_ID = '$orderId'";
+  $result2 = $conn->query($sql2);
+  if($result2){
     $conn->commit();
-    echo json_encode($rows);
-  }else {
-    trigger_error('Invalid query: ' . $conn->error);
-    echo "0 results";
+  }
+  else {
+    $conn->roll_back();
+  }
+  echo $result2;
 }
+else{
+  echo $result;
+}
+
 $conn->close();
 ?>

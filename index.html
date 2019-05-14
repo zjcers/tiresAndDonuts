@@ -2,7 +2,21 @@
 <head>
 <title>KVZ Tires and Donuts</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
 <script>
+function wait1second() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 1000);
+  });
+}
+
+async function asyncSleep() {
+  var result = await wait1second();
+}
+
 function toggleVisible(event, id, defaultDisplay)
 {
     var element = document.getElementById(id);
@@ -131,6 +145,7 @@ function showInvoice(orderId)
 function viewInvoicesWindow(invoices)
 {
     var container = document.createElement("div");
+    container.setAttribute("id", "Invoice");
     container.classList.add("spreadsheetview");
     var table = document.createElement("table");
     container.appendChild(table);
@@ -157,8 +172,19 @@ function viewInvoicesWindow(invoices)
         var actionsCell = document.createElement("td");
         row.appendChild(actionsCell);
         var buttons = {
-            "View/Edit": function() { showInvoice(orderId); },
-            "Delete": function() { okayCancelWindow("Delete order " + orderId + "?", function() {deleteInvoice(orderId); }); }
+          "View/Edit": function() { showInvoice(orderId); },
+          "Delete": function() {
+            okayCancelWindow("Delete order " + orderId + "?", function()
+            {
+              var element = document.getElementsByClassName("Invoices");
+              //for (var invoice in element)   //Just do first one in list
+              {
+                element[0].parentNode.removeChild(element[0]);
+              }
+              deleteInvoice(orderId);
+              asyncSleep().then(showInvoices());
+            });
+          }
         }
         for (var label in buttons)
         {
@@ -178,7 +204,7 @@ function viewInvoicesWindow(invoices)
         var name = row["FIRST_NAME"] + " " + row["LAST_NAME"];
         addRow(row["PURCHASE_ID"], name, date, amount);
     }
-    makeWindow("Orders", container);
+    makeWindow("Orders", container, "Invoices");
 }
 function moneyFormatter()
 {
@@ -526,16 +552,15 @@ function okayCancelWindow(confText, yesaction, nocancel)
 }
 function deleteInvoice(orderId)
 {
-    fetch("/invoices/"+orderId, {
-        method: "DELETE"
-    }).then((response) => {
+    return fetch("php/deleteInvoice.php?orderId="+orderId)
+    .then((response) => {
         if (response.ok)
             okayCancelWindow("Order #"+orderId+" deleted", () => {}, true);
         else
             throw "Invalid response";
     }).catch((reason) => {
         okayCancelWindow("Could not delete order", () => {}, true);
-    })
+    });
 }
 function createCustomerWindow()
 {
